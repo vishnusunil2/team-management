@@ -31,6 +31,5 @@ func Init(cfg *config.Config) (*gorm.DB, error) {
 	sqlDB.SetConnMaxLifetime(time.Hour)
 	sqlDB.SetMaxIdleConns(20)
 	sqlDB.SetMaxOpenConns(20)
-
 	return db, nil
 }
