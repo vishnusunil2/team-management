@@ -1,9 +1,9 @@
 package team
 
 import (
-	"gorm.io/gorm"
-	"team-management/common/utils"
-	"team-management/internal/models/base"
+	"github.com/google/uuid"
+	"team-management/internal/models/primary/user"
+	"time"
 )
 
 const (
@@ -11,33 +11,31 @@ const (
 )
 
 type Team struct {
-	Id     string `gorm:"primaryKey;index"`
-	Name   string
-	UserId string `gorm:"null"`
-	*base.AuditFields
+	Id        uuid.UUID `gorm:"primaryKey;index"`
+	Name      string
+	CreatedBy string
+	CreatedAt time.Time
+}
+type TeamMember struct {
+	TeamId  string `gorm:"primaryKey"`
+	UserId  string `gorm:"primaryKey"`
+	IsAdmin bool
+	Team    Team      `gorm:"foreignKey:TeamId"`
+	User    user.User `gorm:"foreignKey:UserId"`
 }
 
-func (t *Team) BeforeCreate(tx *gorm.DB) (err error) {
-	if t.Id == "" {
-		for {
-			id, err := utils.GenerateRandomString(utils.AlphaNumeric, OrgIdMaxLength)
-			if err != nil {
-				return err
-			}
-			var exists bool
-			err = tx.Model(&Team{}).
-				Select("1").
-				Where("id=?", id).
-				Limit(1).
-				Scan(&exists).Error
-			if err != nil {
-				return err
-			}
-			if !exists {
-				t.Id = id
-				break
-			}
-		}
+func NewTeam(name string, createdBy string) *Team {
+	return &Team{
+		Id:        uuid.New(),
+		Name:      name,
+		CreatedBy: createdBy,
+		CreatedAt: time.Now(),
 	}
-	return nil
+}
+func NewTeamMember(userId string, teamId string) *TeamMember {
+	return &TeamMember{
+		TeamId:  teamId,
+		UserId:  userId,
+		IsAdmin: false,
+	}
 }

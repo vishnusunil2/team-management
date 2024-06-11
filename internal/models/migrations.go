@@ -13,5 +13,8 @@ func MigrateModels(db *gorm.DB) error {
 	if err := db.AutoMigrate(&user.User{}); err != nil {
 		return err
 	}
+	if err := db.AutoMigrate(&team.TeamMember{}); err != nil {
+		return err
+	}
 	return nil
 }

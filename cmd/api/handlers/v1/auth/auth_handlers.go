@@ -4,20 +4,20 @@ import (
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"team-management/cmd/api/response"
-	"team-management/internal/service/user_service"
+	"team-management/internal/service/auth_service"
 )
 
 type AuthHandler struct {
-	userService *user_service.UserService
+	authService *auth_service.AuthService
 }
 
-func NewAuthHandlers(userService *user_service.UserService) *AuthHandler {
+func NewAuthHandlers(authService *auth_service.AuthService) *AuthHandler {
 	return &AuthHandler{
-		userService: userService,
+		authService: authService,
 	}
 }
 func (h *AuthHandler) RegisterUser(c echo.Context) error {
-	var req user_service.UserSignupRequest
+	var req auth_service.UserSignupRequest
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, response.Response{
 			StatusCode: http.StatusBadRequest,
@@ -26,7 +26,7 @@ func (h *AuthHandler) RegisterUser(c echo.Context) error {
 			Error:      err.Error(),
 		})
 	}
-	userObj, err := h.userService.UserSignup(c, req)
+	userObj, err := h.authService.UserSignup(c, req)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, response.Response{
 			StatusCode: http.StatusBadRequest,
@@ -38,6 +38,32 @@ func (h *AuthHandler) RegisterUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, response.Response{
 		StatusCode: http.StatusOK,
 		Message:    "user signed up successfully",
+		Data:       userObj,
+		Error:      nil,
+	})
+}
+func (h *AuthHandler) Login(c echo.Context) error {
+	var req auth_service.AuthRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, response.Response{
+			StatusCode: http.StatusBadRequest,
+			Message:    "invalid request body",
+			Data:       nil,
+			Error:      err.Error(),
+		})
+	}
+	userObj, err := h.authService.Login(c, &req)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, response.Response{
+			StatusCode: http.StatusBadRequest,
+			Message:    "error logging in",
+			Data:       nil,
+			Error:      err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, response.Response{
+		StatusCode: http.StatusOK,
+		Message:    "logged in successfully",
 		Data:       userObj,
 		Error:      nil,
 	})

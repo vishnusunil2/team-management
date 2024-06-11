@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/google/uuid"
-	"team-management/internal/models/base"
+	"time"
 )
 
 type User struct {
@@ -12,7 +12,8 @@ type User struct {
 	Password  string    `gorm:"null"`
 	FirstName string    `gorm:"not null"`
 	LastName  string    `gorm:"null"`
-	*base.AuditFields
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func NewUser(email, phone, firstName, lastName, password string) *User {
@@ -23,5 +24,6 @@ func NewUser(email, phone, firstName, lastName, password string) *User {
 		FirstName: firstName,
 		LastName:  lastName,
 		Phone:     phone,
+		CreatedAt: time.Now(),
 	}
 }

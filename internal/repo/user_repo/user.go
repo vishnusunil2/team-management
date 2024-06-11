@@ -25,7 +25,15 @@ func (r *Repo) CreateUser(ctx echo.Context, request *CreateUserRequest) (*user.U
 	if res.Error != nil {
 		return nil, res.Error
 	}
+
 	return userObj, nil
+}
+func (r *Repo) GetUserByEmail(ctx echo.Context, email string) (*user.User, error) {
+	var userObj user.User
+	if err := r.getBaseDbQuery(ctx).Where("email=?", email).First(&userObj).Error; err != nil {
+		return nil, err
+	}
+	return &userObj, nil
 }
 func (r *Repo) getBaseDbQuery(ctx echo.Context) *gorm.DB {
 	return r.DB.Model(&user.User{}).
