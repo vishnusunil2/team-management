@@ -44,6 +44,16 @@ func (t *TeamRepo) MakeAdmin(ctx echo.Context, req MemberRequest) error {
 	}
 	return nil
 }
+func (t *TeamRepo) MemberExists(ctx echo.Context, req MemberRequest) (bool, error) {
+	var count int64
+	if err := t.getBaseTeamMemberDbQuery(ctx).
+		Where("team_id=? AND user_id=?", req.TeamId, req.UserId).
+		Count(&count).Error; err != nil {
+		return true, err
+	}
+	return count > 0, nil
+
+}
 func (t *TeamRepo) getBaseDbQuery(ctx echo.Context) *gorm.DB {
 	return t.DB.Model(&team.Team{}).
 		WithContext(ctx.Request().Context())

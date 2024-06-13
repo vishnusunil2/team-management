@@ -11,10 +11,10 @@ const (
 )
 
 type Team struct {
-	Id        uuid.UUID `gorm:"primaryKey;index"`
-	Name      string
-	CreatedBy string
-	CreatedAt time.Time
+	Id        uuid.UUID `gorm:"primaryKey;index" json:"id"`
+	Name      string    `json:"name"`
+	CreatedBy string    `json:"created_by"`
+	CreatedAt time.Time `json:"created_at"`
 }
 type TeamMember struct {
 	TeamId  string `gorm:"primaryKey"`
