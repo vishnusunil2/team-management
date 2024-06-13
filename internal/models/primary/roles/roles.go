@@ -18,8 +18,8 @@ type Group struct {
 	Description string `gorm:"not null"`
 }
 type UserGroup struct {
-	UserId  string    `json:"user_id" gorm:"unique;not null"`
-	GroupId int       `json:"group_id" gorm:"unique;not null"`
+	UserId  string    `json:"user_id" gorm:"not null"`
+	GroupId int       `json:"group_id" gorm:"not null"`
 	User    user.User `gorm:"foreignKey:UserId"`
 	Group   Group     `gorm:"foreignKey:GroupId"`
 }
