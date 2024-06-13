@@ -46,8 +46,8 @@ func registerPermissionHandlers(v1 *echo.Group, deps *di.Dependencies) {
 func registerGroupHandlers(v1 *echo.Group, deps *di.Dependencies) {
 	group := v1.Group("/groups")
 	group.POST("/", deps.RoleHandler.AddGroup)
-	group.POST("/:groupId/users/:userId", deps.RoleHandler.AddGroupRole)
-	group.DELETE("/:groupId/users/:userId", deps.RoleHandler.RemoveGroupRole)
+	group.POST("/:groupId/users/:userId", deps.RoleHandler.AddUserGroup)
+	group.DELETE("/:groupId/users/:userId", deps.RoleHandler.RemoveUserGroup)
 	group.POST("/:groupId/permissions/:permissionId", deps.RoleHandler.AddGroupPermission)
 	group.DELETE("/:groupId/permissions/:permissionId", deps.RoleHandler.RemoveGroupPermission)
 }

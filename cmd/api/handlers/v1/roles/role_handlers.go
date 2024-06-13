@@ -201,7 +201,7 @@ func (r *RoleHandler) AddGroup(c echo.Context) error {
 		Data:       groupObj,
 	})
 }
-func (r *RoleHandler) AddGroupRole(c echo.Context) error {
+func (r *RoleHandler) AddUserGroup(c echo.Context) error {
 	userId := c.Param("userId")
 
 	groupId, err := strconv.Atoi(c.Param("groupId"))
@@ -231,7 +231,7 @@ func (r *RoleHandler) AddGroupRole(c echo.Context) error {
 		Data:       groupRoleObj,
 	})
 }
-func (r *RoleHandler) RemoveGroupRole(c echo.Context) error {
+func (r *RoleHandler) RemoveUserGroup(c echo.Context) error {
 	userId := c.Param("userId")
 
 	groupId, err := strconv.Atoi(c.Param("groupId"))
